@@ -47,7 +47,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'GET users/<userId:\d+>/projects' => 'project/by-user'
+                'GET users/<userId:\d+>/projects' => 'project/by-user',
+                'GET ticks' => 'tick/index'
             ],
         ],
     ],

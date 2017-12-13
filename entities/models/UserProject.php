@@ -2,7 +2,7 @@
 
 namespace app\entities\models;
 
-class UserProject extends BaseModel
+class UserProject extends BaseActiveRecord
 {
     /**
      * @inheritdoc

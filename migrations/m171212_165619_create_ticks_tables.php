@@ -16,8 +16,8 @@ class m171212_165619_create_ticks_tables extends Migration
             'id' => $this->primaryKey(),
             'project_id' => $this->integer()->notNull(),
             'user_id' => $this->integer()->notNull(),
-            'created' => $this->dateTime(),
-            'created_by' => $this->dateTime()
+            'created' => $this->dateTime()->notNull(),
+            'created_by' => $this->integer()->notNull()
         ]);
     }
 
