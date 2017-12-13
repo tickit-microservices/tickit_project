@@ -15,7 +15,7 @@ class m171207_171831_create_user_projects_table extends Migration
         $this->createTable('user_projects', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'project_id' => $this->string()->notNull()
+            'project_id' => $this->integer()->notNull()
         ]);
     }
 

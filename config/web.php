@@ -1,7 +1,5 @@
 <?php
 
-use app\entities\models\User;
-
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $providers = require __DIR__ . '/providers.php';
@@ -24,10 +22,6 @@ $config = [
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
-        ],
-        'user' => [
-            'identityClass' => User::class,
-            'enableAutoLogin' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -53,9 +47,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'GET users' => 'user/index',
-                'POST users' => 'user/create',
-                'POST sessions' => 'session/login'
+                'GET users/<userId:\d+>/projects' => 'project/by-user'
             ],
         ],
     ],
