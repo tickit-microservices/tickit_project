@@ -2,9 +2,9 @@
 
 namespace app\entities\models;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
-class BaseModel extends ActiveRecord
+class BaseModel extends Model
 {
 
 }
