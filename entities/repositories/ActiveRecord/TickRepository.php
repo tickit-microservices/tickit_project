@@ -18,7 +18,6 @@ class TickRepository extends BaseRepository implements TickRepositoryInterface
         $maxDate = $year . '-' . $month . '-' . $maxDay . ' 23:59:59';
 
         return $this->model->find()
-                ->with('project')
                 ->where(['project_id' => $projectId])
                 ->andWhere('created >= :minDate', [':minDate' => $minDate])
                 ->andWhere('created <= :maxDate', [':maxDate' => $maxDate])

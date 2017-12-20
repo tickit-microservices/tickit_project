@@ -48,6 +48,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'GET users/<userId:\d+>/projects' => 'project/by-user',
+                'GET projects/<projectId:\d+>/users' => 'project/users',
                 'GET ticks' => 'tick/index'
             ],
         ],

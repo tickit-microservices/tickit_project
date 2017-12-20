@@ -24,6 +24,7 @@ class UserService
 
     /**
      * Find users
+     *
      * @param array $userIds
      *
      * @return User[]

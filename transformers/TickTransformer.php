@@ -10,7 +10,7 @@ class TickTransformer extends BaseTransformer
     {
         return [
             'id' => $tick->id,
-            'project' => $tick->project,
+            'projectId' => $tick->project_id,
             'user' => $tick->user,
             'created' => $tick->created,
             'createdBy' => $tick->createdByUser

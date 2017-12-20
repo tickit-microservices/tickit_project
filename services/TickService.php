@@ -62,7 +62,7 @@ class TickService extends BaseService
      *
      * @return array
      */
-    private function getUsersFromTicksMappedById($ticks): array
+    private function getUsersFromTicksMappedById($ticks = []): array
     {
         $userIds = collect($ticks)->pluck('user_id')->all();
         $createdByUserIds = collect($ticks)->pluck('created_by')->all();
