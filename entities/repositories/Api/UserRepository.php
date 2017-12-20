@@ -12,7 +12,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function findByIds($userIds = [])
     {
-        $url = $this->getBaseUrl() . '/' . 'users';
+        $userIdParams = http_build_query(['ids' => $userIds]);
+        $url = $this->getBaseUrl() . '/' . 'users?' . $userIdParams;
 
         $response = $this->http->get($url);
 
