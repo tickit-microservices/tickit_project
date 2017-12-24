@@ -17,4 +17,14 @@ interface TickRepositoryInterface extends RepositoryInterface
      * @return Tick[]
      */
     public function findByProjectId(int $projectId, int $month, int $year, int $userId = null);
+
+    /**
+     * Return list users forget ticking by project
+     *
+     * @param int $projectId
+     * @param int $day
+     *
+     * @return int[]
+     */
+    public function findUsersMissTickingByProject(int $projectId, string $day);
 }

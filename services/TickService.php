@@ -3,6 +3,7 @@
 namespace app\services;
 
 use app\entities\models\Tick;
+use app\entities\models\User;
 use app\entities\repositories\TickRepositoryInterface;
 
 class TickService extends BaseService
@@ -70,5 +71,22 @@ class TickService extends BaseService
         $users = $this->userService->findByIds(array_merge($userIds, $createdByUserIds));
 
         return collect($users)->keyBy('id')->all();
+    }
+
+    /**
+     * List all users forget ticking by project
+     *
+     * @param int $projectId
+     * @param string $day
+     *
+     * @return User[]
+     */
+    public function findUsersMissTickingByProject(int $projectId, string $day)
+    {
+        $userIds = $this->repository->findUsersMissTickingByProject($projectId, $day);
+
+        $userIds = collect($userIds)->pluck('user_id')->all();
+
+        return $this->userService->findByIds($userIds);
     }
 }

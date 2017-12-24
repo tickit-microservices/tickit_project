@@ -49,7 +49,8 @@ $config = [
             'rules' => [
                 'GET users/<userId:\d+>/projects' => 'project/by-user',
                 'GET projects/<projectId:\d+>/users' => 'project/users',
-                'GET ticks' => 'tick/index'
+                'GET ticks' => 'tick/index',
+                'GET forget-ticking' => 'tick/forget-ticking',
             ],
         ],
     ],

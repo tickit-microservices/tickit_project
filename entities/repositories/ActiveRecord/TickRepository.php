@@ -24,4 +24,20 @@ class TickRepository extends BaseRepository implements TickRepositoryInterface
                 ->andFilterWhere(['user_id' => $userId])
                 ->all();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function findUsersMissTickingByProject(int $projectId, string $day)
+    {
+        return \Yii::$app->db->createCommand("
+            SELECT user_id FROM user_projects WHERE project_id = 1 AND user_id NOT IN (
+              SELECT user_id FROM ticks WHERE project_id = :projectId AND DATE_FORMAT(created, '%Y-%m-%d') = :day
+            )")
+            ->bindValues([
+                ':projectId' => $projectId,
+                ':day' => $day
+            ])
+            ->queryAll();
+    }
 }
