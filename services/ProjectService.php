@@ -71,4 +71,17 @@ class ProjectService extends BaseService
 
         return $this->userService->findByIds($userIds);
     }
+
+    /**
+     * Join an user to a project
+     *
+     * @param int $userId
+     * @param int $projectId
+     *
+     * @return bool
+     */
+    public function join(int $userId, int $projectId)
+    {
+        return $this->repository->join($userId, $projectId);
+    }
 }

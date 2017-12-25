@@ -48,4 +48,43 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             ->where(['user_id' => $userId])
             ->all();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function join(int $userId, int $projectId)
+    {
+        if ($this->userHasJoinedProject($userId, $projectId)) {
+            return true;
+        }
+
+        $userProjectModel = new UserProject([
+            'user_id' => $userId,
+            'project_id' => $projectId
+        ]);
+
+        return $userProjectModel->save();
+    }
+
+    /**
+     * Check if an user has joined a project or not
+     *
+     * @param int $userId
+     * @param int $projectId
+     *
+     * @return bool
+     */
+    private function userHasJoinedProject(int $userId, int $projectId)
+    {
+        $userProjects = $this->findProjectsByUser($userId);
+
+        foreach ($userProjects as $userProject)
+        {
+            if ($userProject->id === $projectId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
