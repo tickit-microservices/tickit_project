@@ -7,6 +7,13 @@ use app\entities\models\Project;
 interface ProjectRepositoryInterface extends RepositoryInterface
 {
     /**
+     * Return all projects
+     *
+     * @return Project[]
+     */
+    public function findAll();
+
+    /**
      * Return projects of an user
      *
      * @param int $userId

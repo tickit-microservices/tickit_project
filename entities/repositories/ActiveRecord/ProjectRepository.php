@@ -29,6 +29,14 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
     /**
      * @inheritdoc
      */
+    public function findAll()
+    {
+        return $this->model->find()->all();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function findProjectsByUser(int $userId)
     {
         return $this->model
