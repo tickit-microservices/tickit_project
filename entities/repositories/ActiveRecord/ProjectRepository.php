@@ -48,4 +48,17 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             ->where(['user_id' => $userId])
             ->all();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function join(int $userId, int $projectId)
+    {
+        $userProjectModel = new UserProject([
+            'user_id' => $userId,
+            'project_id' => $projectId
+        ]);
+
+        return $userProjectModel->save();
+    }
 }

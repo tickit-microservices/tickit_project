@@ -21,4 +21,14 @@ interface ProjectRepositoryInterface extends RepositoryInterface
      * @return Project[]
      */
     public function findProjectsByUser(int $userId);
+
+    /**
+     * Join an user to a project
+     *
+     * @param int $userId
+     * @param int $projectId
+     *
+     * @return bool
+     */
+    public function join(int $userId, int $projectId);
 }

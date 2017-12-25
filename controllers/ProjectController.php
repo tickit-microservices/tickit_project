@@ -98,4 +98,23 @@ class ProjectController extends BaseController
 
         return $this->responseCollection($userCollection);
     }
+
+    /**
+     * Join an user to a project
+     *
+     * @param $userId
+     * @param $projectId
+     *
+     * @return array
+     */
+    public function actionJoin($userId, $projectId)
+    {
+        $this->projectService->join($userId, $projectId);
+
+        $projects = $this->projectService->findProjectsByUser((int) $userId);
+
+        $projectCollection = new Collection($projects, $this->projectTransformer);
+
+        return $this->responseCollection($projectCollection);
+    }
 }
