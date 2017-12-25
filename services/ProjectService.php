@@ -34,6 +34,16 @@ class ProjectService extends BaseService
     }
 
     /**
+     * Return all projects
+     *
+     * @return Project[]
+     */
+    public function findAll()
+    {
+        return $this->repository->findAll();
+    }
+
+    /**
      * Return projects by user
      *
      * @param int $userId

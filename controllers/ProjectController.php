@@ -54,6 +54,20 @@ class ProjectController extends BaseController
     }
 
     /**
+     * List all projects
+     *
+     * @return array
+     */
+    public function actionIndex()
+    {
+        $projects = $this->projectService->findAll();
+
+        $projectCollection = new Collection($projects, $this->projectTransformer);
+
+        return $this->responseCollection($projectCollection);
+    }
+
+    /**
      * List projects of an user
      *
      * @param string $userId
