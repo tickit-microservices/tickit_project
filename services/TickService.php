@@ -2,10 +2,15 @@
 
 namespace app\services;
 
-use app\entities\models\Tick;
 use app\entities\models\User;
 use app\entities\repositories\TickRepositoryInterface;
 
+/**
+ * Class TickService
+ *
+ * @deprecated
+ * @package app\services
+ */
 class TickService extends BaseService
 {
     /**
@@ -35,46 +40,9 @@ class TickService extends BaseService
     }
 
     /**
-     * List ticks by project
-     *
-     * @param int $projectId
-     * @param int $month
-     * @param int $year
-     * @param int|null $userId
-     *
-     * @return Tick[]
-     */
-    public function findByProjectId(int $projectId, int $month, int $year, int $userId = null)
-    {
-        $ticks = $this->repository->findByProjectId($projectId, $month, $year, $userId);
-
-        $usersMappedById = $this->getUsersFromTicksMappedById($ticks);
-
-        return collect($ticks)->map(function (Tick $tick) use ($usersMappedById) {
-            $tick->user = $usersMappedById[$tick->user_id] ?? null;
-            $tick->createdByUser = $usersMappedById[$tick->created_by] ?? null;
-
-            return $tick;
-        })->all();
-    }
-
-    /**
-     * @param Tick[] $ticks
-     *
-     * @return array
-     */
-    private function getUsersFromTicksMappedById($ticks = []): array
-    {
-        $userIds = collect($ticks)->pluck('user_id')->all();
-        $createdByUserIds = collect($ticks)->pluck('created_by')->all();
-
-        $users = $this->userService->findByIds(array_merge($userIds, $createdByUserIds));
-
-        return collect($users)->keyBy('id')->all();
-    }
-
-    /**
      * List all users forget ticking by project
+     *
+     * @todo Move this method to ProjectService
      *
      * @param int $projectId
      * @param string $day

@@ -34,6 +34,7 @@ class TickController extends BaseController
      * @param Manager $manager
      * @param TickService $tickService
      * @param TickTransformer $tickTransformer
+     * @param UserTransformer $userTransformer
      * @param array $config
      */
     public function __construct(
@@ -53,29 +54,8 @@ class TickController extends BaseController
     }
 
     /**
-     * List ticks
-     *
-     * @return array
-     */
-    public function actionIndex()
-    {
-        $projectId = $this->request->get('project_id');
-        $userId = $this->request->get('user_id');
-        $month = $this->request->get('month');
-        $year = $this->request->get('year');
-
-        $ticks = $this->tickService->findByProjectId($projectId, $month, $year, $userId);
-
-        $tickCollection = new Collection($ticks, $this->tickTransformer);
-
-        return $this->responseCollection($tickCollection);
-    }
-
-    /**
      * List all users forget ticking by project
      *
-     * @param string $projectId
-     * @param string $day
      * @return array
      */
     public function actionForgetTicking()

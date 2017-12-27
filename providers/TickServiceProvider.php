@@ -10,6 +10,12 @@ use app\services\UserService;
 use Yii;
 use yii\base\BootstrapInterface;
 
+/**
+ * Class TickServiceProvider
+ *
+ * @deprecated
+ * @package app\providers
+ */
 class TickServiceProvider implements BootstrapInterface
 {
     public function bootstrap($app)

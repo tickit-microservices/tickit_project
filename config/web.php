@@ -57,7 +57,7 @@ $config = [
                 'GET users/<userId:\d+>/projects' => 'project/by-user',
                 'POST users/<userId:\d+>/join/<projectId:\d+>' => 'project/join',
                 'GET projects/<projectId:\d+>/users' => 'project/users',
-                'GET ticks' => 'tick/index',
+                'GET projects/<projectId:\d+>/ticks/<year:\d+>/<month:\d+>' => 'project/ticks',
                 'GET forget-ticking' => 'tick/forget-ticking',
             ],
         ],
