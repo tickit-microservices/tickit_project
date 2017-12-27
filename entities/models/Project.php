@@ -12,6 +12,11 @@ namespace app\entities\models;
 class Project extends BaseActiveRecord
 {
     /**
+     * @var Tick[]
+     */
+    public $ticksInAMonth;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()

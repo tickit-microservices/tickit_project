@@ -3,6 +3,7 @@
 namespace app\entities\repositories;
 
 use app\entities\models\Project;
+use app\entities\models\Tick;
 
 interface ProjectRepositoryInterface extends RepositoryInterface
 {
@@ -31,4 +32,15 @@ interface ProjectRepositoryInterface extends RepositoryInterface
      * @return bool
      */
     public function join(int $userId, int $projectId);
+
+    /**
+     * Find ticks of a project within a month
+     *
+     * @param int $projectId
+     * @param int $year
+     * @param int $month
+     *
+     * @return Tick[]
+     */
+    public function findTicks(int $projectId, int $year, int $month);
 }

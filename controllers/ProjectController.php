@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use app\services\ProjectService;
+use app\services\TickService;
 use app\transformers\ProjectTransformer;
+use app\transformers\ProjectWithTicksTransformer;
 use app\transformers\UserTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use yii\base\Module;
 
 class ProjectController extends BaseController
@@ -17,9 +20,19 @@ class ProjectController extends BaseController
     private $projectService;
 
     /**
+     * @var TickService
+     */
+    private $tickService;
+
+    /**
      * @var ProjectTransformer
      */
     private $projectTransformer;
+
+    /**
+     * @var ProjectWithTicksTransformer
+     */
+    private $projectWithTicksTransformer;
 
     /**
      * @var UserTransformer
@@ -33,7 +46,9 @@ class ProjectController extends BaseController
      * @param Module $module
      * @param Manager $manager
      * @param ProjectService $projectService
+     * @param TickService $tickService
      * @param ProjectTransformer $projectTransformer
+     * @param ProjectWithTicksTransformer $projectWithTicksTransformer
      * @param UserTransformer $userTransformer
      * @param array $config
      */
@@ -42,21 +57,25 @@ class ProjectController extends BaseController
         Module $module,
         Manager $manager,
         ProjectService $projectService,
+        TickService $tickService,
         ProjectTransformer $projectTransformer,
+        ProjectWithTicksTransformer $projectWithTicksTransformer,
         UserTransformer $userTransformer,
         array $config = []
     ) {
         parent::__construct($id, $module, $manager, $config);
 
         $this->projectService = $projectService;
+        $this->tickService = $tickService;
         $this->projectTransformer = $projectTransformer;
+        $this->projectWithTicksTransformer = $projectWithTicksTransformer;
         $this->userTransformer = $userTransformer;
     }
 
     /**
      * List all projects
      *
-     * @return array
+     * @return mixed
      */
     public function actionIndex()
     {
@@ -72,7 +91,7 @@ class ProjectController extends BaseController
      *
      * @param string $userId
      *
-     * @return array
+     * @return mixed
      */
     public function actionByUser($userId)
     {
@@ -88,7 +107,7 @@ class ProjectController extends BaseController
      *
      * @param string $projectId
      *
-     * @return array
+     * @return mixed
      */
     public function actionUsers($projectId)
     {
@@ -102,10 +121,10 @@ class ProjectController extends BaseController
     /**
      * Join an user to a project
      *
-     * @param $userId
-     * @param $projectId
+     * @param int $userId
+     * @param int $projectId
      *
-     * @return array
+     * @return mixed
      */
     public function actionJoin($userId, $projectId)
     {
@@ -116,5 +135,23 @@ class ProjectController extends BaseController
         $projectCollection = new Collection($projects, $this->projectTransformer);
 
         return $this->responseCollection($projectCollection);
+    }
+
+    /**
+     * List ticks in a project
+     *
+     * @param int $projectId
+     * @param int $year
+     * @param int $month
+     *
+     * @return mixed
+     */
+    public function actionTicks($projectId, $year, $month)
+    {
+        $project = $this->projectService->findProjectWithTicks((int)$projectId, (int)$year, (int)$month);
+
+        $projectItem = new Item($project, $this->projectWithTicksTransformer);
+
+        return $this->responseItem($projectItem);
     }
 }

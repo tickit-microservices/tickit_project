@@ -3,6 +3,7 @@
 namespace app\services;
 
 use app\entities\models\Project;
+use app\entities\models\Tick;
 use app\entities\models\User;
 use app\entities\repositories\ProjectRepositoryInterface;
 
@@ -83,5 +84,48 @@ class ProjectService extends BaseService
     public function join(int $userId, int $projectId)
     {
         return $this->repository->join($userId, $projectId);
+    }
+
+    /**
+     * Find a project by id and populate all ticks within a month
+     *
+     * @param int $projectId
+     * @param int $year
+     * @param int $month
+     *
+     * @return Project|null
+     */
+    public function findProjectWithTicks(int $projectId, int $year, int $month)
+    {
+        /** @var Project $project */
+        $project = $this->repository->findOne(['id' => $projectId]);
+        $ticks = $this->repository->findTicks($projectId, $year, $month);
+        $usersMappedById = $this->getUsersFromTicksMappedById($ticks);
+
+        $tickWithUsers = collect($ticks)->map(function (Tick $tick) use ($usersMappedById) {
+            $tick->user = $usersMappedById[$tick->user_id] ?? null;
+            $tick->createdByUser = $usersMappedById[$tick->created_by] ?? null;
+
+            return $tick;
+        })->all();
+
+        $project->ticksInAMonth = $tickWithUsers;
+
+        return $project;
+    }
+
+    /**
+     * @param Tick[] $ticks
+     *
+     * @return array
+     */
+    private function getUsersFromTicksMappedById($ticks = []): array
+    {
+        $userIds = collect($ticks)->pluck('user_id')->all();
+        $createdByUserIds = collect($ticks)->pluck('created_by')->all();
+
+        $users = $this->userService->findByIds(array_merge($userIds, $createdByUserIds));
+
+        return collect($users)->keyBy('id')->all();
     }
 }

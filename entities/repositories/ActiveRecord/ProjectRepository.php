@@ -3,6 +3,7 @@
 namespace app\entities\repositories\ActiveRecord;
 
 use app\entities\models\Project;
+use app\entities\models\Tick;
 use app\entities\models\UserProject;
 use app\entities\repositories\ProjectRepositoryInterface;
 
@@ -14,16 +15,23 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
     private $userProjectModel;
 
     /**
+     * @var Tick
+     */
+    private $tickModel;
+
+    /**
      * ProjectRepository constructor.
      *
      * @param Project $model
      * @param UserProject $userProject
+     * @param Tick $tickModel
      */
-    public function __construct(Project $model, UserProject $userProject)
+    public function __construct(Project $model, UserProject $userProject, Tick $tickModel)
     {
         parent::__construct($model);
 
         $this->userProjectModel = $userProject;
+        $this->tickModel = $tickModel;
     }
 
     /**
@@ -64,6 +72,24 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         ]);
 
         return $userProjectModel->save();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findTicks(int $projectId, int $year, int $month)
+    {
+        $minDay = '01';
+        $maxDay = '31';
+
+        $minDate = $year . '-' . $month . '-' . $minDay . ' 00:00:00';
+        $maxDate = $year . '-' . $month . '-' . $maxDay . ' 23:59:59';
+
+        return $this->tickModel->find()
+            ->where(['project_id' => $projectId])
+            ->andWhere('created >= :minDate', [':minDate' => $minDate])
+            ->andWhere('created <= :maxDate', [':maxDate' => $maxDate])
+            ->all();
     }
 
     /**
