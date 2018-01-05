@@ -21,7 +21,7 @@ class ProjectWithTicksTransformer extends BaseTransformer
                     'id' => $tick->id,
                     'user' => $tick->user,
                     'created' => $tick->created,
-                    'createdBy' => $tick->createdByUser
+                    'createdByUser' => $tick->createdByUser
                 ];
             }
         }
