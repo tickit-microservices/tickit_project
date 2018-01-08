@@ -58,6 +58,8 @@ $config = [
                 'POST users/<userId:\d+>/join/<projectId:\d+>' => 'project/join',
                 'GET projects/<projectId:\d+>/users' => 'project/users',
                 'GET projects/<projectId:\d+>/ticks/<year:\d+>/<month:\d+>' => 'project/ticks',
+                'POST projects/<projectId:\d+>/ticks' => 'project/tick',
+                'DELETE projects/<projectId:\d+>/ticks/<tickId:\d+>' => 'project/remove-tick',
                 'GET forget-ticking' => 'tick/forget-ticking',
             ],
         ],

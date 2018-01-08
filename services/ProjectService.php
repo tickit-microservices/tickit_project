@@ -115,6 +115,66 @@ class ProjectService extends BaseService
     }
 
     /**
+     * Add a tick for a project in a day
+     *
+     * @param int $projectId
+     * @param int $userId
+     * @param string $date
+     *
+     * @return Tick|bool
+     */
+    public function tick(int $projectId, int $userId, string $date)
+    {
+        $tick = $this->findExistingTick($projectId, $userId, $date);
+
+        if ($tick) {
+            return $tick;
+        }
+
+        $newTick = new Tick();
+        $newTick->project_id = $projectId;
+        $newTick->user_id = $userId;
+        $newTick->created = $date . ' ' . date('H-i-s');
+        $newTick->created_by = $userId;
+
+        $this->repository->save($newTick);
+
+        return $newTick;
+    }
+
+    /**
+     * Remove a specific tick
+     *
+     * @param int $tickId
+     *
+     * @return bool
+     */
+    public function unTick(int $tickId)
+    {
+        $tick = $this->repository->findTickById($tickId);
+
+        if (!$tick) {
+            return true;
+        }
+
+        return $this->repository->removeTick($tick);
+    }
+
+    /**
+     * Find an existing tick
+     *
+     * @param int $projectId
+     * @param int $userId
+     * @param string $date
+     *
+     * @return Tick|null
+     */
+    private function findExistingTick(int $projectId, int $userId, string $date)
+    {
+        return $this->repository->findExistingTick($projectId, $userId, $date);
+    }
+
+    /**
      * @param Tick[] $ticks
      *
      * @return array
