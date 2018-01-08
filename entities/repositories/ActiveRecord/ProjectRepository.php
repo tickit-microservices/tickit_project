@@ -6,6 +6,7 @@ use app\entities\models\Project;
 use app\entities\models\Tick;
 use app\entities\models\UserProject;
 use app\entities\repositories\ProjectRepositoryInterface;
+use yii\db\Expression;
 
 class ProjectRepository extends BaseRepository implements ProjectRepositoryInterface
 {
@@ -90,6 +91,36 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
             ->andWhere('created >= :minDate', [':minDate' => $minDate])
             ->andWhere('created <= :maxDate', [':maxDate' => $maxDate])
             ->all();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findTickById(int $tickId)
+    {
+        return $this->tickModel->find()
+            ->where(['id' => $tickId])
+            ->one();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeTick(Tick $tick)
+    {
+        return $tick->delete();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findExistingTick(int $projectId, int $userId, string $date)
+    {
+        return $this->tickModel->find()
+            ->where(['project_id' => $projectId])
+            ->andWhere(['user_id' => $userId])
+            ->andWhere(['DATE(created)' => $date])
+            ->one();
     }
 
     /**
