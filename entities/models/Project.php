@@ -14,7 +14,12 @@ class Project extends BaseActiveRecord
     /**
      * @var Tick[]
      */
-    public $ticksInAMonth;
+    public $ticksInAMonth = [];
+
+    /**
+     * @var User[]
+     */
+    public $untickedUsers = [];
 
     /**
      * @inheritdoc

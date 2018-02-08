@@ -115,16 +115,123 @@ class ProjectService extends BaseService
     }
 
     /**
+     * Find unticked users for all project
+     *
+     * @param string $date
+     *
+     * @return Project[]
+     */
+    public function findProjectsWithUntickedUsers($date)
+    {
+        if (empty($date)) {
+            return [];
+        }
+
+        $projects = $this->findAll();
+
+        $ticksInADay = $this->repository->findTicksByDate($date);
+
+        collect($projects)->each(function (Project $project) use ($ticksInADay) {
+            $untickedUsers = [];
+            $usersInProject = $this->findUsersInProject($project->id);
+
+            collect($usersInProject)->each(function(User $user) use ($project, $ticksInADay, &$untickedUsers) {
+                if (false === collect($ticksInADay)->search(function(Tick $tick) use ($project, $user) {
+                    return (int)$tick->user_id === (int)$user->id && (int)$tick->project_id === (int)$project->id;
+                })) {
+                    $untickedUsers[] = $user;
+                }
+            });
+
+            $project->untickedUsers = $untickedUsers;
+        });
+
+        return $projects;
+    }
+
+    /**
+     * Add a tick for a project in a day
+     *
+     * @param int $projectId
+     * @param int $userId
+     * @param string $date
+     *
+     * @return Tick|bool
+     */
+    public function tick(int $projectId, int $userId, string $date)
+    {
+        $tick = $this->findExistingTick($projectId, $userId, $date);
+
+        if ($tick) {
+            return $tick;
+        }
+
+        $newTick = new Tick();
+        $newTick->project_id = $projectId;
+        $newTick->user_id = $userId;
+        $newTick->created = $date . ' ' . date('H-i-s');
+        $newTick->created_by = $userId;
+
+        $this->repository->save($newTick);
+
+        return $newTick;
+    }
+
+    /**
+     * Remove a specific tick
+     *
+     * @param int $tickId
+     *
+     * @return bool
+     */
+    public function unTick(int $tickId)
+    {
+        $tick = $this->repository->findTickById($tickId);
+
+        if (!$tick) {
+            return true;
+        }
+
+        return $this->repository->removeTick($tick);
+    }
+
+    /**
+     * Find an existing tick
+     *
+     * @param int $projectId
+     * @param int $userId
+     * @param string $date
+     *
+     * @return Tick|null
+     */
+    private function findExistingTick(int $projectId, int $userId, string $date)
+    {
+        return $this->repository->findExistingTick($projectId, $userId, $date);
+    }
+
+    /**
      * @param Tick[] $ticks
      *
-     * @return array
+     * @return User[]
      */
     private function getUsersFromTicksMappedById($ticks = []): array
     {
         $userIds = collect($ticks)->pluck('user_id')->all();
         $createdByUserIds = collect($ticks)->pluck('created_by')->all();
 
-        $users = $this->userService->findByIds(array_merge($userIds, $createdByUserIds));
+        return $this->getUsersMappedById(array_merge($userIds, $createdByUserIds));
+    }
+
+    /**
+     * Find users by id and then map the result by id field
+     *
+     * @param array $userIds
+     *
+     * @return User[]
+     */
+    private function getUsersMappedById($userIds = []): array
+    {
+        $users = $this->userService->findByIds($userIds);
 
         return collect($users)->keyBy('id')->all();
     }

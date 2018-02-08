@@ -93,6 +93,46 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
     }
 
     /**
+     * @inheritdoc
+     */
+    public function findTickById(int $tickId)
+    {
+        return $this->tickModel->find()
+            ->where(['id' => $tickId])
+            ->one();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findTicksByDate($date)
+    {
+        return $this->tickModel->find()
+            ->where('DATE(created) = :date', ['date' => $date])
+            ->all();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeTick(Tick $tick)
+    {
+        return $tick->delete();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findExistingTick(int $projectId, int $userId, string $date)
+    {
+        return $this->tickModel->find()
+            ->where(['project_id' => $projectId])
+            ->andWhere(['user_id' => $userId])
+            ->andWhere(['DATE(created)' => $date])
+            ->one();
+    }
+
+    /**
      * Check if an user has joined a project or not
      *
      * @param int $userId
