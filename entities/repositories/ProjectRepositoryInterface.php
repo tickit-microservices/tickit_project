@@ -54,6 +54,15 @@ interface ProjectRepositoryInterface extends RepositoryInterface
     public function findTickById(int $tickId);
 
     /**
+     * Find all ticks within a day
+     *
+     * @param $date
+     *
+     * @return Tick[]
+     */
+    public function findTicksByDate($date);
+
+    /**
      * Remove tick by its Id
      *
      * @param Tick $tick

@@ -61,6 +61,7 @@ $config = [
                 'POST projects/<projectId:\d+>/ticks' => 'project/tick',
                 'DELETE projects/<projectId:\d+>/ticks/<tickId:\d+>' => 'project/remove-tick',
                 'GET forget-ticking' => 'tick/forget-ticking',
+                'GET projects/unticks' => 'project/unticked-users'
             ],
         ],
     ],

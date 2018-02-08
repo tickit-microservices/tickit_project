@@ -6,7 +6,6 @@ use app\entities\models\Project;
 use app\entities\models\Tick;
 use app\entities\models\UserProject;
 use app\entities\repositories\ProjectRepositoryInterface;
-use yii\db\Expression;
 
 class ProjectRepository extends BaseRepository implements ProjectRepositoryInterface
 {
@@ -101,6 +100,16 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
         return $this->tickModel->find()
             ->where(['id' => $tickId])
             ->one();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findTicksByDate($date)
+    {
+        return $this->tickModel->find()
+            ->where('DATE(created) = :date', ['date' => $date])
+            ->all();
     }
 
     /**
