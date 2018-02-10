@@ -115,13 +115,13 @@ class ProjectService extends BaseService
     }
 
     /**
-     * Find unticked users for all project
+     * Find ticked/unticked users for all project
      *
      * @param string $date
      *
      * @return Project[]
      */
-    public function findProjectsWithUntickedUsers($date)
+    public function findProjectsWithTickStatistic($date)
     {
         if (empty($date)) {
             return [];
@@ -133,16 +133,22 @@ class ProjectService extends BaseService
 
         collect($projects)->each(function (Project $project) use ($ticksInADay) {
             $untickedUsers = [];
+            $tickedUsers = [];
             $usersInProject = $this->findUsersInProject($project->id);
 
-            collect($usersInProject)->each(function(User $user) use ($project, $ticksInADay, &$untickedUsers) {
-                if (false === collect($ticksInADay)->search(function(Tick $tick) use ($project, $user) {
+            collect($usersInProject)->each(function(User $user) use ($project, $ticksInADay, &$untickedUsers, &$tickedUsers) {
+                $isUserTicked = collect($ticksInADay)->search(function(Tick $tick) use ($project, $user) {
                     return (int)$tick->user_id === (int)$user->id && (int)$tick->project_id === (int)$project->id;
-                })) {
+                });
+
+                if ($isUserTicked === false) {
                     $untickedUsers[] = $user;
+                } else {
+                    $tickedUsers[] = $user;
                 }
             });
 
+            $project->tickedUsers = $tickedUsers;
             $project->untickedUsers = $untickedUsers;
         });
 
