@@ -22,6 +22,11 @@ class Project extends BaseActiveRecord
     public $untickedUsers = [];
 
     /**
+     * @var User[]
+     */
+    public $tickedUsers = [];
+
+    /**
      * @inheritdoc
      */
     public static function tableName()

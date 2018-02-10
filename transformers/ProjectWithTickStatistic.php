@@ -4,7 +4,7 @@ namespace app\transformers;
 
 use app\entities\models\Project;
 
-class ProjectWithUntickedUsersTransformer extends BaseTransformer
+class ProjectWithTickStatistic extends BaseTransformer
 {
     /**
      * @var UserTransformer
@@ -12,7 +12,7 @@ class ProjectWithUntickedUsersTransformer extends BaseTransformer
     private $userTransformer;
 
     /**
-     * ProjectWithUntickedUsersTransformer constructor.
+     * ProjectWithTickStatistic constructor.
      *
      * @param UserTransformer $userTransformer
      */
@@ -29,17 +29,21 @@ class ProjectWithUntickedUsersTransformer extends BaseTransformer
     public function transform(Project $project)
     {
         $untickedUsers = [];
+        $tickedUsers = [];
 
-        if ($project->untickedUsers) {
-            foreach ($project->untickedUsers as $user) {
-                $untickedUsers[] = $this->userTransformer->transform($user);
-            }
+        foreach ($project->untickedUsers as $user) {
+            $untickedUsers[] = $this->userTransformer->transform($user);
+        }
+
+        foreach ($project->tickedUsers as $user) {
+            $tickedUsers[] = $this->userTransformer->transform($user);
         }
 
         return [
             'id' => $project->id,
             'name' => $project->name,
-            'unticked-users' => $untickedUsers
+            'untickedUsers' => $untickedUsers,
+            'tickedUsers' => $tickedUsers
         ];
     }
 }
